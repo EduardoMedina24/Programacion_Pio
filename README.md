@@ -9,7 +9,7 @@ La Aplicación de Gestión de Agencia de Viajes es un software modular diseñado
 El proyecto está compuesto por varios módulos, cada uno encargado de una parte específica de la aplicación:
 
 - **`app.py`**: Contiene la implementación de la interfaz gráfica principal utilizando Tkinter. Proporciona botones para acceder a las diferentes secciones de la aplicación.
-- **`menu_principal.py`**: Ofrece una interfaz de línea de comandos para la gestión de clientes, paquetes turísticos, reservas de vuelos, reservas de hoteles y facturación desde la consola.
+- **`main.py`**: Ofrece una interfaz de línea de comandos para la gestión de clientes, paquetes turísticos, reservas de vuelos, reservas de hoteles y facturación desde la consola.
 
 ## Instalación
 
