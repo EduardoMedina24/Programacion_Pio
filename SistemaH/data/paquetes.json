@@ -1,0 +1,10 @@
+[
+    {
+        "nombre": "californiando",
+        "descripcion": "vije en cruzero",
+        "precio": 200000.0,
+        "destinos": [
+            "california"
+        ]
+    }
+]

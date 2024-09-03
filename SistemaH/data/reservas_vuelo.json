@@ -1,0 +1,26 @@
+[
+    {
+        "codigo_reserva": "12",
+        "cliente": "dsdgs",
+        "vuelo": "12",
+        "fecha_reserva": "2020-02-02",
+        "fecha_salida": "2022-03-03",
+        "fecha_llegada": "2022-03-04"
+    },
+    {
+        "codigo_reserva": "1",
+        "cliente": "juan perez",
+        "vuelo": "12",
+        "fecha_reserva": "2022-03-20",
+        "fecha_salida": "2022-03-24",
+        "fecha_llegada": "2022-03-25"
+    },
+    {
+        "codigo_reserva": "1",
+        "cliente": "hola",
+        "vuelo": "12",
+        "fecha_reserva": "2024-12-26",
+        "fecha_salida": "2024-12-28",
+        "fecha_llegada": "2024-12-28"
+    }
+]

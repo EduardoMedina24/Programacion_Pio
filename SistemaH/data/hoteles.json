@@ -1,0 +1,10 @@
+[
+    {
+        "codigo_reserva": "1",
+        "cliente": "2",
+        "hotel": "33e",
+        "fecha_reserva": "125434",
+        "fecha_checkin": "124356",
+        "fecha_checkout": "124345"
+    }
+]
