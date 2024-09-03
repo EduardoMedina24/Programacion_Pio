@@ -6,6 +6,9 @@ from hoteles.main_reservas_hotel import main as gestionar_hoteles
 from facturas.main_facturas import main as gestionar_facturas
 
 def mostrar_menu_principal():
+    """
+    Muestra el menú principal en la consola.
+    """
     print("\n--- Menú Principal ---")
     print("1. Gestión de Clientes")
     print("2. Gestión de Paquetes Turísticos")
@@ -15,6 +18,9 @@ def mostrar_menu_principal():
     print("6. Salir")
 
 def main():
+    """
+    Ejecuta el menú principal y maneja la selección del usuario.
+    """
     while True:
         mostrar_menu_principal()
         opcion = input("Seleccione una opción: ")

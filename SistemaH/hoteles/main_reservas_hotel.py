@@ -1,11 +1,11 @@
-
-from hoteles.gestion_reservas_hotel import (guardar_reservas, cargar_reservas,buscar_reserva, eliminar_reserva)
-
+from hoteles.gestion_reservas_hotel import (guardar_reservas, cargar_reservas, buscar_reserva, eliminar_reserva)
 from hoteles.reserva_hotel import ReservaHotel
-
 from datetime import datetime
 
 def mostrar_menu_reservas_hotel():
+    """
+    Muestra el menú principal para la gestión de reservas de hoteles.
+    """
     print("\n--- Menú de Gestión de Reservas de Hoteles ---")
     print("1. Crear una nueva reserva de hotel")
     print("2. Consultar una reserva de hotel")
@@ -15,86 +15,112 @@ def mostrar_menu_reservas_hotel():
     print("6. Salir")
 
 def crear_reserva(reservas):
-    codigo_reserva = input("Ingrese el código de reserva: ")
-    cliente = input("Ingrese el nombre del cliente: ")
-    hotel = input("Ingrese el nombre del hotel: ")
-    fecha_reserva = input("Ingrese la fecha de reserva (YYYY-MM-DD): ")
-    fecha_checkin = input("Ingrese la fecha de check-in (YYYY-MM-DD): ")
-    fecha_checkout = input("Ingrese la fecha de check-out (YYYY-MM-DD): ")
+    """
+    Crea una nueva reserva de hotel y la añade a la lista.
     
-    # Validar fechas
+    :param reservas: Lista de reservas en la que añadir la nueva reserva.
+    """
+    codigo_reserva = input("Código de Reserva: ")
+    cliente = input("Cliente: ")
+    hotel = input("Hotel: ")
+    fecha_reserva = input("Fecha de Reserva (YYYY-MM-DD): ")
+    fecha_checkin = input("Fecha de Check-in (YYYY-MM-DD): ")
+    fecha_checkout = input("Fecha de Check-out (YYYY-MM-DD): ")
+
     try:
         fecha_reserva = datetime.strptime(fecha_reserva, "%Y-%m-%d").date()
         fecha_checkin = datetime.strptime(fecha_checkin, "%Y-%m-%d").date()
         fecha_checkout = datetime.strptime(fecha_checkout, "%Y-%m-%d").date()
+        
+        reserva = ReservaHotel(codigo_reserva, cliente, hotel, fecha_reserva, fecha_checkin, fecha_checkout)
+        reservas.append(reserva)
+        guardar_reservas(reservas, "data/hoteles.json")
+        print("Reserva creada con éxito.")
     except ValueError:
-        print("Fecha inválida. Use el formato YYYY-MM-DD.")
-        return
-
-    reserva = ReservaHotel(codigo_reserva, cliente, hotel, fecha_reserva, fecha_checkin, fecha_checkout)
-    reservas.append(reserva)
-    print("Reserva de hotel creada con éxito.")
+        print("Error: La fecha debe estar en formato YYYY-MM-DD.")
 
 def modificar_reserva(reservas):
-    codigo_reserva = input("Ingrese el código de reserva a modificar: ")
+    """
+    Modifica una reserva existente.
+    
+    :param reservas: Lista de reservas.
+    """
+    codigo_reserva = input("Código de Reserva a modificar: ")
     reserva = buscar_reserva(reservas, codigo_reserva)
+    
     if reserva:
-        nuevo_cliente = input("Ingrese el nuevo nombre del cliente (presione enter para mantener el actual): ")
-        nuevo_hotel = input("Ingrese el nuevo nombre del hotel (presione enter para mantener el actual): ")
-        nueva_fecha_reserva = input("Ingrese la nueva fecha de reserva (YYYY-MM-DD, presione enter para mantener la actual): ")
-        nueva_fecha_checkin = input("Ingrese la nueva fecha de check-in (YYYY-MM-DD, presione enter para mantener la actual): ")
-        nueva_fecha_checkout = input("Ingrese la nueva fecha de check-out (YYYY-MM-DD, presione enter para mantener la actual): ")
+        print("Reserva encontrada.")
+        cliente = input(f"Nuevo Cliente (dejar en blanco para no cambiar): ")
+        hotel = input(f"Nuevo Hotel (dejar en blanco para no cambiar): ")
+        fecha_reserva = input(f"Nueva Fecha de Reserva (dejar en blanco para no cambiar, formato YYYY-MM-DD): ")
+        fecha_checkin = input(f"Nueva Fecha de Check-in (dejar en blanco para no cambiar, formato YYYY-MM-DD): ")
+        fecha_checkout = input(f"Nueva Fecha de Check-out (dejar en blanco para no cambiar, formato YYYY-MM-DD): ")
 
-        # Validar fechas
-        try:
-            nueva_fecha_reserva = datetime.strptime(nueva_fecha_reserva, "%Y-%m-%d").date() if nueva_fecha_reserva else None
-            nueva_fecha_checkin = datetime.strptime(nueva_fecha_checkin, "%Y-%m-%d").date() if nueva_fecha_checkin else None
-            nueva_fecha_checkout = datetime.strptime(nueva_fecha_checkout, "%Y-%m-%d").date() if nueva_fecha_checkout else None
-        except ValueError:
-            print("Fecha inválida. Use el formato YYYY-MM-DD.")
-            return
-
-        reserva.actualizar_info(
-            cliente=nuevo_cliente if nuevo_cliente else None,
-            hotel=nuevo_hotel if nuevo_hotel else None,
-            fecha_reserva=nueva_fecha_reserva if nueva_fecha_reserva else None,
-            fecha_checkin=nueva_fecha_checkin if nueva_fecha_checkin else None,
-            fecha_checkout=nueva_fecha_checkout if nueva_fecha_checkout else None
-        )
-        print("Reserva de hotel actualizada con éxito.")
+        if cliente:
+            reserva.cliente = cliente
+        if hotel:
+            reserva.hotel = hotel
+        if fecha_reserva:
+            reserva.fecha_reserva = datetime.strptime(fecha_reserva, "%Y-%m-%d").date()
+        if fecha_checkin:
+            reserva.fecha_checkin = datetime.strptime(fecha_checkin, "%Y-%m-%d").date()
+        if fecha_checkout:
+            reserva.fecha_checkout = datetime.strptime(fecha_checkout, "%Y-%m-%d").date()
+        
+        guardar_reservas(reservas, "data/hoteles.json")
+        print("Reserva modificada con éxito.")
     else:
         print("Reserva no encontrada.")
 
 def consultar_reserva(reservas):
-    codigo_reserva = input("Ingrese el código de reserva a consultar: ")
+    """
+    Consulta una reserva por código y muestra la información.
+    
+    :param reservas: Lista de reservas.
+    """
+    codigo_reserva = input("Código de Reserva a consultar: ")
     reserva = buscar_reserva(reservas, codigo_reserva)
+    
     if reserva:
         print(reserva.mostrar_info())
     else:
         print("Reserva no encontrada.")
 
 def eliminar_reserva_menu(reservas):
-    codigo_reserva = input("Ingrese el código de reserva a eliminar: ")
+    """
+    Elimina una reserva por código.
+    
+    :param reservas: Lista de reservas.
+    """
+    codigo_reserva = input("Código de Reserva a eliminar: ")
     if eliminar_reserva(reservas, codigo_reserva):
+        guardar_reservas(reservas, "data/hoteles.json")
         print("Reserva eliminada con éxito.")
     else:
         print("Reserva no encontrada.")
 
 def mostrar_todas_las_reservas(reservas):
-    if not reservas:
-        print("No hay reservas de hotel registradas.")
-    else:
+    """
+    Muestra todas las reservas registradas.
+    
+    :param reservas: Lista de reservas.
+    """
+    if reservas:
         for reserva in reservas:
             print(reserva.mostrar_info())
+    else:
+        print("No hay reservas registradas.")
 
 def main():
-    archivo = "data/reservas_hotel.json"
-    reservas = cargar_reservas(archivo)
-
+    """
+    Función principal para ejecutar el menú de gestión de reservas de hoteles.
+    """
+    reservas = cargar_reservas("data/hoteles.json")
+    
     while True:
         mostrar_menu_reservas_hotel()
         opcion = input("Seleccione una opción: ")
-
+        
         if opcion == "1":
             crear_reserva(reservas)
         elif opcion == "2":
@@ -106,11 +132,10 @@ def main():
         elif opcion == "5":
             mostrar_todas_las_reservas(reservas)
         elif opcion == "6":
-            guardar_reservas(reservas, archivo)
-            print("Cambios guardados. Saliendo del programa.")
+            print("Saliendo...")
             break
         else:
-            print("Opción no válida. Por favor, intente de nuevo.")
+            print("Opción inválida. Inténtelo de nuevo.")
 
 if __name__ == "__main__":
     main()

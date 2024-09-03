@@ -5,6 +5,22 @@ from .factura import Factura
 from datetime import datetime
 
 class GestionFacturasGUI:
+    """
+    Clase que representa la interfaz gráfica para la gestión de facturas.
+
+    Métodos:
+        create_widgets(): Crea los widgets de la interfaz gráfica.
+        add_factura(): Muestra una ventana para añadir una nueva factura.
+        save_factura(): Guarda una nueva factura.
+        search_factura(): Muestra una ventana para buscar una factura.
+        find_factura(): Busca y muestra una factura.
+        update_factura(): Muestra una ventana para actualizar una factura.
+        load_factura_for_update(): Carga una factura para actualización.
+        save_updated_factura(factura): Guarda la factura actualizada.
+        delete_factura(): Muestra una ventana para eliminar una factura.
+        remove_factura(): Elimina una factura.
+        view_all(): Muestra todas las facturas.
+    """
     def __init__(self, master):
         self.master = master
         self.master.title("Gestión de Facturación")
@@ -14,7 +30,9 @@ class GestionFacturasGUI:
         self.create_widgets()
 
     def create_widgets(self):
-        
+        """
+        Crea los widgets de la interfaz gráfica.
+        """
         self.label = tk.Label(self.master, text="Gestión de Facturación", font=("Arial", 14))
         self.label.pack(pady=10)
 
@@ -34,7 +52,9 @@ class GestionFacturasGUI:
         self.view_all_button.pack(pady=5)
 
     def add_factura(self):
-        
+        """
+        Muestra una ventana para añadir una nueva factura.
+        """
         self.add_window = tk.Toplevel(self.master)
         self.add_window.title("Añadir Factura")
 
@@ -61,13 +81,15 @@ class GestionFacturasGUI:
         tk.Button(self.add_window, text="Guardar", command=self.save_factura).pack(pady=10)
 
     def save_factura(self):
+        """
+        Guarda una nueva factura.
+        """
         numero = self.numero_entry.get()
         cliente = self.cliente_entry.get()
         descripcion = self.descripcion_entry.get()
         monto = self.monto_entry.get()
         fecha = self.fecha_entry.get()
 
-        
         try:
             fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
         except ValueError:
@@ -81,7 +103,9 @@ class GestionFacturasGUI:
         messagebox.showinfo("Éxito", "Factura añadida correctamente.")
 
     def search_factura(self):
-    
+        """
+        Muestra una ventana para buscar una factura.
+        """
         self.search_window = tk.Toplevel(self.master)
         self.search_window.title("Buscar Factura")
 
@@ -92,6 +116,9 @@ class GestionFacturasGUI:
         tk.Button(self.search_window, text="Buscar", command=self.find_factura).pack(pady=10)
 
     def find_factura(self):
+        """
+        Busca y muestra una factura.
+        """
         numero = self.numero_search_entry.get()
         factura = buscar_factura(self.facturas, numero)
 
@@ -101,7 +128,9 @@ class GestionFacturasGUI:
             messagebox.showwarning("No Encontrado", "Factura no encontrada.")
 
     def update_factura(self):
-
+        """
+        Muestra una ventana para actualizar una factura.
+        """
         self.update_window = tk.Toplevel(self.master)
         self.update_window.title("Actualizar Factura")
 
@@ -109,62 +138,45 @@ class GestionFacturasGUI:
         self.numero_update_entry = tk.Entry(self.update_window)
         self.numero_update_entry.pack(pady=5)
 
-        tk.Button(self.update_window, text="Buscar", command=self.load_factura_for_update).pack(pady=10)
+        tk.Button(self.update_window, text="Cargar", command=self.load_factura_for_update).pack(pady=10)
 
     def load_factura_for_update(self):
+        """
+        Carga una factura para actualización.
+        """
         numero = self.numero_update_entry.get()
-        factura = buscar_factura(self.facturas, numero)
+        self.factura = buscar_factura(self.facturas, numero)
 
-        if factura:
-            
+        if self.factura:
             self.update_window.destroy()
-            self.update_factura_window = tk.Toplevel(self.master)
-            self.update_factura_window.title("Actualizar Factura")
-
-            tk.Label(self.update_factura_window, text="Nombre del Cliente:").pack(pady=5)
-            self.update_cliente_entry = tk.Entry(self.update_factura_window)
-            self.update_cliente_entry.insert(0, factura.cliente)
-            self.update_cliente_entry.pack(pady=5)
-
-            tk.Label(self.update_factura_window, text="Descripción:").pack(pady=5)
-            self.update_descripcion_entry = tk.Entry(self.update_factura_window)
-            self.update_descripcion_entry.insert(0, factura.descripcion)
-            self.update_descripcion_entry.pack(pady=5)
-
-            tk.Label(self.update_factura_window, text="Monto Total:").pack(pady=5)
-            self.update_monto_entry = tk.Entry(self.update_factura_window)
-            self.update_monto_entry.insert(0, factura.monto_total)
-            self.update_monto_entry.pack(pady=5)
-
-            tk.Label(self.update_factura_window, text="Fecha de Emisión (YYYY-MM-DD):").pack(pady=5)
-            self.update_fecha_entry = tk.Entry(self.update_factura_window)
-            self.update_fecha_entry.insert(0, factura.fecha_emision)
-            self.update_fecha_entry.pack(pady=5)
-
-            tk.Button(self.update_factura_window, text="Actualizar", command=lambda: self.save_updated_factura(factura)).pack(pady=10)
+            self.add_factura()
+            self.numero_entry.insert(0, self.factura.numero_factura)
+            self.cliente_entry.insert(0, self.factura.cliente)
+            self.descripcion_entry.insert(0, self.factura.descripcion)
+            self.monto_entry.insert(0, self.factura.monto_total)
+            self.fecha_entry.insert(0, str(self.factura.fecha_emision))
+            tk.Button(self.add_window, text="Actualizar", command=lambda: self.save_updated_factura(self.factura)).pack(pady=10)
         else:
             messagebox.showwarning("No Encontrado", "Factura no encontrada.")
 
     def save_updated_factura(self, factura):
-        cliente = self.update_cliente_entry.get()
-        descripcion = self.update_descripcion_entry.get()
-        monto = self.update_monto_entry.get()
-        fecha = self.update_fecha_entry.get()
-
-        
-        try:
-            fecha = datetime.strptime(fecha, "%Y-%m-%d").date()
-        except ValueError:
-            messagebox.showwarning("Advertencia", "Fecha inválida. Use el formato YYYY-MM-DD.")
-            return
-
-        factura.actualizar_info(cliente=cliente, descripcion=descripcion, monto_total=monto, fecha_emision=fecha)
+        """
+        Guarda la factura actualizada.
+        """
+        factura.actualizar_info(
+            cliente=self.cliente_entry.get(),
+            descripcion=self.descripcion_entry.get(),
+            monto_total=self.monto_entry.get(),
+            fecha_emision=datetime.strptime(self.fecha_entry.get(), "%Y-%m-%d").date()
+        )
         guardar_facturas(self.facturas, "data/facturas.json")
-        self.update_factura_window.destroy()
+        self.add_window.destroy()
         messagebox.showinfo("Éxito", "Factura actualizada correctamente.")
 
     def delete_factura(self):
-        
+        """
+        Muestra una ventana para eliminar una factura.
+        """
         self.delete_window = tk.Toplevel(self.master)
         self.delete_window.title("Eliminar Factura")
 
@@ -175,24 +187,23 @@ class GestionFacturasGUI:
         tk.Button(self.delete_window, text="Eliminar", command=self.remove_factura).pack(pady=10)
 
     def remove_factura(self):
+        """
+        Elimina una factura.
+        """
         numero = self.numero_delete_entry.get()
         if eliminar_factura(self.facturas, numero):
             guardar_facturas(self.facturas, "data/facturas.json")
-            self.delete_window.destroy()
             messagebox.showinfo("Éxito", "Factura eliminada correctamente.")
         else:
             messagebox.showwarning("No Encontrado", "Factura no encontrada.")
+        self.delete_window.destroy()
 
     def view_all(self):
-        
-        self.view_window = tk.Toplevel(self.master)
-        self.view_window.title("Ver Todas las Facturas")
-
-        for factura in self.facturas:
-            tk.Label(self.view_window, text=factura.mostrar_info()).pack(pady=5)
-
-def main(master):
-    app = GestionFacturasGUI(master)
-
-if __name__ == "__main__":
-    pass
+        """
+        Muestra todas las facturas.
+        """
+        facturas_info = "\n\n".join([factura.mostrar_info() for factura in self.facturas])
+        if facturas_info:
+            messagebox.showinfo("Todas las Facturas", facturas_info)
+        else:
+            messagebox.showinfo("Sin Facturas", "No hay facturas disponibles.")
